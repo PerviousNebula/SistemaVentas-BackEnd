@@ -98,9 +98,13 @@ public class CategoriasController : ControllerBase
                 message = "Hubo un error al actualizar la categoría, intente más tarde"
             });
         }
+        
+        List<CategoriaViewModel> categoriasModel = await ListaDeCategorias();
+
         return Ok(new {
             Ok = true,
-            message = "La categoría se ha actualizado exitosamente!"
+            message = "La categoría se ha actualizado exitosamente!",
+            categorias = categoriasModel
         });
     }
 
@@ -129,9 +133,13 @@ public class CategoriasController : ControllerBase
                 message = "Hubo un problema al crear su categoría, inténtelo más tarde"
             });
         }
+        // Obtengo la lista de las categorias con el modelo de la vista
+        List<CategoriaViewModel> categoriasModel = await ListaDeCategorias();
+
         return Ok(new {
             ok = true,
-            message = "Su categoría fue creada exitosamente"
+            message = "Su categoría fue creada exitosamente",
+            categorias = categoriasModel
         });
     }
 
@@ -251,4 +259,56 @@ public class CategoriasController : ControllerBase
             message = "La categoría se ha activado exitosamente!"
         });
     }
+
+    [HttpGet("[action]/{hint}")]
+    public async Task<ActionResult> Filtrar([FromRoute] string hint, [FromQuery] CategoriasParametros filterParametros)
+    {
+        if (string.IsNullOrEmpty(hint))
+        {
+            return BadRequest(new {
+                ok = false,
+                message = "Error al filtrar, el filtro no tiene ningún caracter"
+            });
+        }
+        var items = await _context.Categorias.Where(c => c.nombre.ToLower().Contains(hint.ToLower()))
+                                             .ToListAsync();
+        var categorias = PagedList<Categoria>.ToPagedList(items, filterParametros.PageNumber, 10);
+        // Response headers para la paginación
+        var metadata = new
+	    {
+            categorias.TotalCount,
+            categorias.PageSize,
+            categorias.CurrentPage,
+            categorias.TotalPages,
+            categorias.HasNext,
+            categorias.HasPrevious
+	    };
+        Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(metadata));
+        
+        return Ok(categorias.Select(c => new CategoriaViewModel {
+            idCategoria = c.idCategoria,
+            nombre = c.nombre,
+            descripcion = c.descripcion,
+            activo = c.activo
+        }));
+    }    
+    
+    // Retornar lista completa de categorias actualizada con su respectivo model y paginación
+    public async Task<List<CategoriaViewModel>> ListaDeCategorias () {
+        // Se obtienen todas las categorias con la recien creada que se mostraran al usuarios
+        var categoriaParametros = new CategoriasParametros { PageNumber = 1, PageSize = 10 };
+        var categorias = await this.Listar(categoriaParametros);
+        List<CategoriaViewModel> categoriasModel = new List<CategoriaViewModel>();
+        foreach (var item in categorias)
+        {
+            categoriasModel.Add(new CategoriaViewModel {
+                idCategoria = item.idCategoria,
+                nombre = item.nombre,
+                descripcion = item.descripcion,
+                activo = item.activo
+             });
+        }
+        return categoriasModel;
+    }
+
 }
