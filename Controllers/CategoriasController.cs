@@ -100,7 +100,6 @@ public class CategoriasController : ControllerBase
         }
         
         List<CategoriaViewModel> categoriasModel = await ListaDeCategorias();
-
         return Ok(new {
             Ok = true,
             message = "La categoría se ha actualizado exitosamente!",
@@ -133,12 +132,11 @@ public class CategoriasController : ControllerBase
                 message = "Hubo un problema al crear su categoría, inténtelo más tarde"
             });
         }
-        // Obtengo la lista de las categorias con el modelo de la vista
-        List<CategoriaViewModel> categoriasModel = await ListaDeCategorias();
 
+        List<CategoriaViewModel> categoriasModel = await ListaDeCategorias();
         return Ok(new {
-            ok = true,
-            message = "Su categoría fue creada exitosamente",
+            Ok = true,
+            message = "La categoría se ha creado exitosamente!",
             categorias = categoriasModel
         });
     }
@@ -296,8 +294,8 @@ public class CategoriasController : ControllerBase
     // Retornar lista completa de categorias actualizada con su respectivo model y paginación
     public async Task<List<CategoriaViewModel>> ListaDeCategorias () {
         // Se obtienen todas las categorias con la recien creada que se mostraran al usuarios
-        var categoriaParametros = new CategoriasParametros { PageNumber = 1, PageSize = 10 };
-        var categorias = await this.Listar(categoriaParametros);
+        var categorias = await this.Listar(new CategoriasParametros { PageNumber = 1, PageSize = 10 });
+        
         List<CategoriaViewModel> categoriasModel = new List<CategoriaViewModel>();
         foreach (var item in categorias)
         {

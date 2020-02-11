@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 public class Categoria {
@@ -8,4 +9,6 @@ public class Categoria {
     [StringLength(256)]
     public string descripcion { get; set; }
     public bool activo { get; set; }
+
+    public ICollection<Articulo> articulos { get; set; }
 }
