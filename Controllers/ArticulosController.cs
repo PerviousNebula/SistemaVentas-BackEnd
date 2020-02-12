@@ -20,7 +20,9 @@ public class ArticulosController : ControllerBase
     [HttpGet("[action]")]
     public async Task<IEnumerable<ArticuloViewModel>> Listar([FromQuery] ArticulosParametros articulosParametros)
     {
-        var articulos = PagedList<Articulo>.ToPagedList(await _context.Articulos.Include(a => a.categoria).ToListAsync(),
+        var articulos = PagedList<Articulo>.ToPagedList(await _context.Articulos.Include(a => a.categoria)
+                                                                                .OrderBy(a => a.nombre)
+                                                                                .ToListAsync(),
                                                         articulosParametros.PageNumber,
                                                         articulosParametros.PageSize);
         var metadata = new
