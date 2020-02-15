@@ -46,8 +46,14 @@ namespace SistemaVentas
             {
                 app.UseDeveloperExceptionPage();
             }
+            else
+            {
+                app.UseHsts();
+            }
 
             app.UseCors("Todos");
+
+            app.UseStaticFiles();
 
             // app.UseHttpsRedirection();
 
