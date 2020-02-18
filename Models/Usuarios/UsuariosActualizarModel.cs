@@ -21,7 +21,6 @@ public class UsuariosActualizarModel
     [EmailAddress]
     [StringLength(50, ErrorMessage = "El email no debe tener más de 50 caracteres.")]
     public string email { get; set; }
-    [Required]
     public string password { get; set; }
     public bool act_password { get; set; }
     public string imgUrl { get; set; }

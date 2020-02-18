@@ -6,6 +6,7 @@ public class DbContextSistema : DbContext
     public DbSet<Articulo> Articulos { get; set; }
     public DbSet<Rol> Roles { get; set; }
     public DbSet<Usuario> Usuarios { get; set; }
+    public DbSet<Persona> Personas { get; set; }
     public DbContextSistema(DbContextOptions<DbContextSistema> options) : base(options)
     {
 
@@ -18,5 +19,6 @@ public class DbContextSistema : DbContext
         modelBuilder.ApplyConfiguration(new ArticuloMap());
         modelBuilder.ApplyConfiguration(new RolMap());
         modelBuilder.ApplyConfiguration(new UsuarioMap());
+        modelBuilder.ApplyConfiguration(new PersonaMap());
     }
 }

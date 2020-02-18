@@ -1,10 +1,15 @@
 using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.IO;
 using System.Linq;
+using System.Security.Claims;
+using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 
 [Route("api/[controller]")]
@@ -12,10 +17,12 @@ using Newtonsoft.Json;
 public class UsuariosController : ControllerBase
 {
     private readonly DbContextSistema _context;
+    private readonly IConfiguration _config;
 
-    public UsuariosController(DbContextSistema context)
+    public UsuariosController(DbContextSistema context, IConfiguration config)
     {
         _context = context;
+        _config = config;
     }
 
     // GET: api/Usuarios/Listar
@@ -188,6 +195,7 @@ public class UsuariosController : ControllerBase
         {
             CrearPasswordHash(model.password, out byte[] passwordHash, out byte[] passwordSalt);
             usuario.password_hash = passwordHash;
+            usuario.password_salt = passwordSalt;
         }
 
         try
@@ -326,6 +334,113 @@ public class UsuariosController : ControllerBase
         });
     }
     
+    // GET: api/Usuarios/Filtrar/arturo
+    [HttpGet("[action]/{hint}")]
+    public async Task<ActionResult> Filtrar([FromRoute] string hint, [FromQuery] PaginationParameters pagParams)
+    {
+        if (string.IsNullOrEmpty(hint))
+        {
+            return BadRequest(new {
+                ok = false,
+                message = "Error al filtrar, el filtro no tiene ningún caracter"
+            });
+        }
+        var items = await _context.Usuarios.Include(u => u.rol)
+                                           .Where(c => c.nombre.ToLower().Contains(hint.ToLower()))
+                                           .ToListAsync();
+        var usuarios = PagedList<Usuario>.ToPagedList(items, pagParams.PageNumber, 10);
+        // Response headers para la paginación
+        var metadata = new
+	    {
+            usuarios.TotalCount,
+            usuarios.PageSize,
+            usuarios.CurrentPage,
+            usuarios.TotalPages,
+            usuarios.HasNext,
+            usuarios.HasPrevious
+	    };
+        Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(metadata));
+        
+        return Ok(usuarios.Select(u => new UsuarioViewModel {
+            idUsuario = u.idUsuario,
+            idRol = u.idRol,
+            rol = u.rol.nombre,
+            nombre = u.nombre,
+            tipo_documento = u.tipo_documento,
+            num_documento = u.num_documento,
+            direccion = u.direccion,
+            telefono = u.telefono,
+            email = u.email,
+            password_hash = u.password_hash,
+            imgUrl = u.imgUrl,
+            activo = u.activo
+        }));
+    }    
+    
+    [HttpPost("[action]")]
+    public async Task<IActionResult> Login(LoginViewModel model)
+    {
+        string email = model.email.ToLower();
+        var usuario = await _context.Usuarios.Where(u => u.activo).Include(u => u.rol).FirstOrDefaultAsync(u => u.email == email);
+
+        if (usuario == null)
+        {
+            return NotFound(new {
+                ok = false,
+                message = "El email o la contraseña son incorrectos, intente nuevamente"
+            });
+        }
+
+        if (!VerificarPasswordHash(model.password, usuario.password_hash, usuario.password_salt))
+        {
+            return NotFound(new {
+                ok = false,
+                message = "El email o la contraseña son incorrectos, intente nuevamente"
+            });
+        }
+
+        var claims = new List<Claim>
+        {
+            new Claim(ClaimTypes.NameIdentifier, usuario.idUsuario.ToString()),
+            new Claim(ClaimTypes.Email, email),
+            new Claim(ClaimTypes.Role, usuario.rol.nombre),
+            new Claim("idUsuario", usuario.idUsuario.ToString()),
+            new Claim("rol", usuario.rol.nombre),
+            new Claim("nombre", usuario.nombre),
+            new Claim("email", usuario.email),
+            new Claim("img", usuario.imgUrl)
+        };
+
+        return Ok(new {
+            ok = true,
+            token = GenerarToken(claims)
+        });
+    }
+
+    private bool VerificarPasswordHash(string password, byte[] passwordHashAlmacenado, byte[] passwordSalt)
+    {
+        using (var hmac = new System.Security.Cryptography.HMACSHA512(passwordSalt))
+        {
+            var passwordHashNuevo = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
+            return new ReadOnlySpan<byte>(passwordHashAlmacenado).SequenceEqual(new ReadOnlySpan<byte>(passwordHashNuevo));
+        }
+    }
+    
+    private string GenerarToken(List<Claim> claims)
+    {
+        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]));
+        var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+
+        var token = new JwtSecurityToken(
+            _config["Jwt:Issuer"],
+            _config["Jwt:Issuer"],
+            expires: DateTime.Now.AddMinutes(30),
+            signingCredentials: creds,
+            claims: claims);
+
+        return new JwtSecurityTokenHandler().WriteToken(token);
+    }
+
     public async Task<List<UsuarioViewModel>> ListaDeUsuarios () {
         // Se obtienen todas las categorias con la recien creada que se mostraran al usuarios
         var usuarios = await this.Listar(new PaginationParameters { PageNumber = 1, PageSize = 10 });
@@ -349,7 +464,7 @@ public class UsuariosController : ControllerBase
             });
         }
         return usuariosModel;
-    }
+    }    
     
     private void CrearPasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt)
     {

@@ -27,3 +27,7 @@
 /home/arturo/Desktop/dotNET/SistemaVentas/obj/Debug/netcoreapp3.1/SistemaVentas.dll
 /home/arturo/Desktop/dotNET/SistemaVentas/obj/Debug/netcoreapp3.1/SistemaVentas.pdb
 /home/arturo/Desktop/dotNET/SistemaVentas/bin/Debug/netcoreapp3.1/Newtonsoft.Json.dll
+/home/arturo/Desktop/dotNET/SistemaVentas/bin/Debug/netcoreapp3.1/Microsoft.IdentityModel.JsonWebTokens.dll
+/home/arturo/Desktop/dotNET/SistemaVentas/bin/Debug/netcoreapp3.1/Microsoft.IdentityModel.Logging.dll
+/home/arturo/Desktop/dotNET/SistemaVentas/bin/Debug/netcoreapp3.1/Microsoft.IdentityModel.Tokens.dll
+/home/arturo/Desktop/dotNET/SistemaVentas/bin/Debug/netcoreapp3.1/System.IdentityModel.Tokens.Jwt.dll
