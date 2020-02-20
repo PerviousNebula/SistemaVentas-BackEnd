@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -115,6 +116,14 @@ public class CategoriasController : ControllerBase
         {
             return BadRequest(ModelState);
         }
+        var existeCategoria = await _context.Categorias.FirstOrDefaultAsync(c => c.nombre == model.nombre);
+        if (existeCategoria != null)
+        {
+            return BadRequest(new {
+                ok = false,
+                message = "La categoría que intenta agregar ya existe"
+            });
+        }
         Categoria categoria = new Categoria {
             nombre = model.nombre,
             descripcion = model.descripcion,
@@ -125,7 +134,7 @@ public class CategoriasController : ControllerBase
         {
             await _context.SaveChangesAsync();
         }
-        catch (DbUpdateConcurrencyException)
+        catch (Exception)
         {
             return BadRequest(new {
                 ok = false,

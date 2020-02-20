@@ -408,15 +408,58 @@ public class UsuariosController : ControllerBase
             new Claim("rol", usuario.rol.nombre),
             new Claim("nombre", usuario.nombre),
             new Claim("email", usuario.email),
-            new Claim("img", usuario.imgUrl)
+            new Claim("img", usuario.imgUrl != null ? usuario.imgUrl : "")
         };
+
+        List<MenuViewModel> menu = await obtenerMenu(usuario.idRol);
+        if (menu == null)
+        {
+            return NotFound(new {
+                ok = false,
+                message = "No se puedo obtener el menu del usuario"
+            });
+        }
 
         return Ok(new {
             ok = true,
-            token = GenerarToken(claims)
+            token = GenerarToken(claims),
+            menu
         });
     }
 
+    [HttpGet("[action]")]
+    public async Task<List<MenuViewModel>> obtenerMenu(int idRol)
+    {
+        // Menu del admin sale al revez
+        var menu_rol = await _context.Menu_Rol.Where(mr => mr.idRol == idRol).Include(mr => mr.rol)
+                                              .Include(mr => mr.menu).ToListAsync();
+        
+        if (menu_rol == null)
+        {
+            return null;
+        }
+        List<MenuViewModel> menu = new List<MenuViewModel>();
+        foreach (var item in menu_rol)
+        {
+            List<SubcategoryViewModel> subcategoriesModel = new List<SubcategoryViewModel>();
+            var subcategories = await _context.Subcategorias.Where(s => s.idMenu == item.idMenu)
+                                                            .ToListAsync();
+            foreach (var sc in subcategories)
+            {
+                subcategoriesModel.Add(new SubcategoryViewModel {
+                    title = sc.title,
+                    url = sc.url
+                });
+            }
+            menu.Add(new MenuViewModel {
+                title = item.menu.title,
+                icon = item.menu.icon,
+                subcategories = subcategoriesModel
+            });                        
+        }
+        return menu;
+    }
+    
     private bool VerificarPasswordHash(string password, byte[] passwordHashAlmacenado, byte[] passwordSalt)
     {
         using (var hmac = new System.Security.Cryptography.HMACSHA512(passwordSalt))
