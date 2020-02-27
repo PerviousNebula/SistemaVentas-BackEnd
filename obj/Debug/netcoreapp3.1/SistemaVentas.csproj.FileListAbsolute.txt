@@ -31,3 +31,6 @@
 /home/arturo/Desktop/dotNET/SistemaVentas/bin/Debug/netcoreapp3.1/Microsoft.IdentityModel.Logging.dll
 /home/arturo/Desktop/dotNET/SistemaVentas/bin/Debug/netcoreapp3.1/Microsoft.IdentityModel.Tokens.dll
 /home/arturo/Desktop/dotNET/SistemaVentas/bin/Debug/netcoreapp3.1/System.IdentityModel.Tokens.Jwt.dll
+/home/arturo/Desktop/dotNET/SistemaVentas/bin/Debug/netcoreapp3.1/Microsoft.AspNetCore.Authentication.JwtBearer.dll
+/home/arturo/Desktop/dotNET/SistemaVentas/bin/Debug/netcoreapp3.1/Microsoft.IdentityModel.Protocols.dll
+/home/arturo/Desktop/dotNET/SistemaVentas/bin/Debug/netcoreapp3.1/Microsoft.IdentityModel.Protocols.OpenIdConnect.dll

@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 public class Usuario
@@ -27,4 +28,5 @@ public class Usuario
     public bool activo { get; set; }
 
     public Rol rol { get; set; }
+    public ICollection<Ingreso> ingresos { get; set; }
 }

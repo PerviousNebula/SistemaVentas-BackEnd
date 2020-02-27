@@ -10,6 +10,8 @@ public class DbContextSistema : DbContext
     public DbSet<Menu> Menu { get; set; }
     public DbSet<Subcategory> Subcategorias { get; set; }
     public DbSet<Menu_Rol> Menu_Rol { get; set; }
+    public DbSet<Ingreso> Ingresos { get; set; }
+    public DbSet<DetalleIngreso> DetallesIngresos { get; set; }
     public DbContextSistema(DbContextOptions<DbContextSistema> options) : base(options)
     {
 
@@ -26,5 +28,7 @@ public class DbContextSistema : DbContext
         modelBuilder.ApplyConfiguration(new MenuMap());
         modelBuilder.ApplyConfiguration(new SubcategoryMap());
         modelBuilder.ApplyConfiguration(new Menu_RolMap());
+        modelBuilder.ApplyConfiguration(new IngresoMap());
+        modelBuilder.ApplyConfiguration(new DetalleIngresoMap());
     }
 }

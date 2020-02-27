@@ -6,6 +6,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -26,6 +27,7 @@ public class UsuariosController : ControllerBase
     }
 
     // GET: api/Usuarios/Listar
+    [Authorize(Roles = "Administrador")]
     [HttpGet("[action]")]
     public async Task<IEnumerable<UsuarioViewModel>> Listar([FromQuery] PaginationParameters pagParams)
     {
@@ -61,6 +63,7 @@ public class UsuariosController : ControllerBase
     }
 
     // GET: api/Usuarios/Mostrar/1
+    [Authorize(Roles = "Administrador, Almacenero, Vendedor")]
     [HttpGet("[action]/{id}")]
     public async Task<IActionResult> Mostrar([FromRoute] int id)
     {
@@ -99,6 +102,7 @@ public class UsuariosController : ControllerBase
     }
 
     // POST: api/Usuarios/Crear
+    [Authorize(Roles = "Administrador")]
     [HttpPost("[action]")]
     public async Task<IActionResult> Crear([FromBody] UsuariosCrearModel model)
     {
@@ -157,6 +161,7 @@ public class UsuariosController : ControllerBase
     }
     
     // PUT: api/Usuarios/Actualizar
+    [Authorize(Roles = "Administrador, Almacenero, Vendedor")]
     [HttpPut("[action]")]
     public async Task<IActionResult> Actualizar([FromBody] UsuariosActualizarModel model)
     {
@@ -220,6 +225,7 @@ public class UsuariosController : ControllerBase
     }
 
     [HttpPost("[action]")]
+    [Authorize(Roles = "Administrador, Almacenero, Vendedor")]
     public ActionResult UploadProfilePic([FromForm] UsuariosImgModel file)
     {
         string fileName = String.Empty;
@@ -251,6 +257,7 @@ public class UsuariosController : ControllerBase
     }
     
     // PUT: api/Usuarios/Desactivar/1
+    [Authorize(Roles = "Administrador")]
     [HttpPut("[action]/{id}")]
     public async Task<IActionResult> Desactivar([FromRoute] int id)
     {
@@ -293,6 +300,7 @@ public class UsuariosController : ControllerBase
     }
     
     // PUT: api/Usuarios/Activar/1
+    [Authorize(Roles = "Administrador")]
     [HttpPut("[action]/{id}")]
     public async Task<IActionResult> Activar([FromRoute] int id)
     {
@@ -335,6 +343,7 @@ public class UsuariosController : ControllerBase
     }
     
     // GET: api/Usuarios/Filtrar/arturo
+    [Authorize(Roles = "Administrador")]
     [HttpGet("[action]/{hint}")]
     public async Task<ActionResult> Filtrar([FromRoute] string hint, [FromQuery] PaginationParameters pagParams)
     {

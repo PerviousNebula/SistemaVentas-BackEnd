@@ -1,10 +1,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 
+[Authorize(Roles = "Administrador, Almacenero")]
 [Route("api/[controller]")]
 [ApiController]
 public class ArticulosController : ControllerBase
@@ -49,7 +51,7 @@ public class ArticulosController : ControllerBase
         });
     }
 
-    // GET: api/Categorias/Mostrar/1
+    // GET: api/Articulos/Mostrar/1
     [HttpGet("[action]/{id}")]
     public async Task<ActionResult> Mostrar([FromRoute] int id)
     {
@@ -80,6 +82,39 @@ public class ArticulosController : ControllerBase
         });
     }
 
+    // GET: api/Articulos/BuscarCodigoIngreso/12345
+    [HttpGet("[action]/{codigo}")]
+    public async Task<ActionResult> BuscarCodigoIngreso([FromRoute] string codigo)
+    {
+        if (codigo.Length <= 0) {
+            return BadRequest(new {
+                ok = false,
+                message = "El código proporcionado del articulo es inválido"
+            });
+        }
+        var articulo = await _context.Articulos.Include(a => a.categoria)
+                                               .Where(a => a.activo == true)
+                                               .SingleOrDefaultAsync(a => a.codigo == codigo);
+        if (articulo == null)
+        {
+            return NotFound(new {
+                ok = false,
+                message = "El artículo que intenta buscar no existe en el sistema"
+            });
+        }
+        return Ok(new ArticuloViewModel {
+            idArticulo = articulo.idArticulo,
+            idCategoria = articulo.idCategoria,
+            categoria = articulo.categoria.nombre,
+            nombre = articulo.nombre,
+            descripcion = articulo.descripcion,
+            codigo = articulo.codigo,
+            precio_venta = articulo.precio_venta,
+            stock = articulo.stock,
+            activo = articulo.activo
+        });
+    }
+    
     // PUT: api/Articulos/Actualizar
     [HttpPut("[action]")]
     public async Task<ActionResult> Actualizar([FromBody] ArticuloActualizarModel model) 
@@ -267,7 +302,7 @@ public class ArticulosController : ControllerBase
         var items = await _context.Articulos.Where(a => a.nombre.ToLower().Contains(hint.ToLower()))
                                             .Include(a => a.categoria)
                                             .ToListAsync();
-        var articulos = PagedList<Articulo>.ToPagedList(items, filterParametros.PageNumber, 10);
+        var articulos = PagedList<Articulo>.ToPagedList(items, filterParametros.PageNumber, filterParametros.PageSize);
         // Response headers para la paginación
         var metadata = new
 	    {
@@ -293,8 +328,7 @@ public class ArticulosController : ControllerBase
         }));
     }    
     
-
-    // Retornar lista completa de categorias actualizada con su respectivo model y paginación
+    // Retornar lista completa de articulos actualizada con su respectivo model y paginación
     public async Task<List<ArticuloViewModel>> ListaDeArticulos () {
         // Se obtienen todas los articulos con la recien creada que se mostraran al usuarios
         var articulos = await this.Listar(new ArticulosParametros { PageNumber = 1, PageSize = 10 });

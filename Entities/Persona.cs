@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 public class Persona
@@ -13,4 +14,6 @@ public class Persona
     public string direccion { get; set; }
     public string telefono { get; set; }
     public string email { get; set; }
+
+    public ICollection<Ingreso> ingresos { get; set; }
 }

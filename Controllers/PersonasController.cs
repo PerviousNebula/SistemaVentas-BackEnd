@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
@@ -18,6 +19,7 @@ public class PersonasController : ControllerBase
     }
 
     // GET: api/Personas/ListarClientes
+    [Authorize(Roles = "Administrador, Vendedor")]
     [HttpGet("[action]")]
     public async Task<IEnumerable<PersonaViewModel>> ListarClientes([FromQuery] PaginationParameters pagParams)
     {
@@ -49,6 +51,7 @@ public class PersonasController : ControllerBase
     }
 
     // GET: api/Personas/ListarProveedores
+    [Authorize(Roles = "Administrador, Almacenero")]
     [HttpGet("[action]")]
     public async Task<IEnumerable<PersonaViewModel>> ListarProveedores([FromQuery] PaginationParameters pagParams)
     {
@@ -80,6 +83,7 @@ public class PersonasController : ControllerBase
     }
 
     // POST: api/Personas/Crear
+    [Authorize(Roles = "Administrador, Almacenero, Vendedor")]
     [HttpPost("[action]")]
     public async Task<IActionResult> Crear([FromBody] PersonaCrearModel model)
     {
@@ -132,6 +136,7 @@ public class PersonasController : ControllerBase
     }
 
     // PUT: api/Personas/Actualizar
+    [Authorize(Roles = "Administrador, Almacenero, Vendedor")]
     [HttpPut("[action]")]
     public async Task<IActionResult> Actualizar([FromBody] PersonaActualizarModel model)
     {
@@ -189,6 +194,7 @@ public class PersonasController : ControllerBase
     }
 
     // GET: api/Personas/FiltrarClientes/arturo
+    [Authorize(Roles = "Administrador, Vendedor")]
     [HttpGet("[action]/{hint}")]
     public async Task<ActionResult> FiltrarClientes([FromRoute] string hint, [FromQuery] PaginationParameters filterParametros)
     {
@@ -228,6 +234,7 @@ public class PersonasController : ControllerBase
     }    
     
     // GET: api/Personas/FiltrarClientes/arturo
+    [Authorize(Roles = "Administrador, Almacenero")]
     [HttpGet("[action]/{hint}")]
     public async Task<ActionResult> FiltrarProveedores([FromRoute] string hint, [FromQuery] PaginationParameters filterParametros)
     {
