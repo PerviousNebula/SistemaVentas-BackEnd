@@ -1,7 +1,10 @@
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Runtime.Serialization.Formatters.Binary;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
@@ -20,13 +23,12 @@ public class ArticulosController : ControllerBase
 
     // GET: api/Articulos/Listar
     [HttpGet("[action]")]
-    public async Task<IEnumerable<ArticuloViewModel>> Listar([FromQuery] ArticulosParametros articulosParametros)
+    public async Task<IEnumerable<ArticuloViewModel>> Listar([FromQuery] PaginationParameters PaginationParameters)
     {
-        var articulos = PagedList<Articulo>.ToPagedList(await _context.Articulos.Include(a => a.categoria)
-                                                                                .OrderBy(a => a.nombre)
-                                                                                .ToListAsync(),
-                                                        articulosParametros.PageNumber,
-                                                        articulosParametros.PageSize);
+        var items = await _context.Articulos.Include(a => a.categoria).OrderBy(a => a.nombre).ToListAsync();
+        var articulos = PagedList<Articulo>.ToPagedList(items,
+                                                        PaginationParameters.PageNumber,
+                                                        PaginationParameters.PageSize);
         var metadata = new
 	    {
             articulos.TotalCount,
@@ -290,7 +292,7 @@ public class ArticulosController : ControllerBase
     }
 
     [HttpGet("[action]/{hint}")]
-    public async Task<ActionResult> Filtrar([FromRoute] string hint, [FromQuery] ArticulosParametros filterParametros)
+    public async Task<ActionResult> Filtrar([FromRoute] string hint, [FromQuery] PaginationParameters filterParametros)
     {
         if (string.IsNullOrEmpty(hint))
         {
@@ -331,7 +333,7 @@ public class ArticulosController : ControllerBase
     // Retornar lista completa de articulos actualizada con su respectivo model y paginación
     public async Task<List<ArticuloViewModel>> ListaDeArticulos () {
         // Se obtienen todas los articulos con la recien creada que se mostraran al usuarios
-        var articulos = await this.Listar(new ArticulosParametros { PageNumber = 1, PageSize = 10 });
+        var articulos = await this.Listar(new PaginationParameters { PageNumber = 1, PageSize = 10 });
         
         List<ArticuloViewModel> articulosModel = new List<ArticuloViewModel>();
         foreach (var item in articulos)

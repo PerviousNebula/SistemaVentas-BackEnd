@@ -245,9 +245,8 @@ public class PersonasController : ControllerBase
                 message = "Error al filtrar, el filtro no tiene ningún caracter"
             });
         }
-        var items = await _context.Personas.Where(c => c.nombre.ToLower().Contains(hint.ToLower()) &&
-                                                       c.tipo_persona == "proveedor"
-                                                ).ToListAsync();
+        var items = await _context.Personas.Where(c => c.nombre.ToLower().Contains(hint.ToLower()) && c.tipo_persona == "proveedor")
+                                           .ToListAsync();
         var personas = PagedList<Persona>.ToPagedList(items, filterParametros.PageNumber, 10);
         // Response headers para la paginación
         var metadata = new

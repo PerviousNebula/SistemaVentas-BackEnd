@@ -12,6 +12,8 @@ public class DbContextSistema : DbContext
     public DbSet<Menu_Rol> Menu_Rol { get; set; }
     public DbSet<Ingreso> Ingresos { get; set; }
     public DbSet<DetalleIngreso> DetallesIngresos { get; set; }
+    public DbSet<Venta> Ventas { get; set; }
+    public DbSet<DetalleVenta> DetallesVentas { get; set; }
     public DbContextSistema(DbContextOptions<DbContextSistema> options) : base(options)
     {
 
@@ -30,5 +32,7 @@ public class DbContextSistema : DbContext
         modelBuilder.ApplyConfiguration(new Menu_RolMap());
         modelBuilder.ApplyConfiguration(new IngresoMap());
         modelBuilder.ApplyConfiguration(new DetalleIngresoMap());
+        modelBuilder.ApplyConfiguration(new VentaMap());
+        modelBuilder.ApplyConfiguration(new DetalleVentaMap());
     }
 }

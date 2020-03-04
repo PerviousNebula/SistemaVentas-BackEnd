@@ -16,4 +16,5 @@ public class Persona
     public string email { get; set; }
 
     public ICollection<Ingreso> ingresos { get; set; }
+    public ICollection<Venta> ventas { get; set; }
 }

@@ -9,6 +9,7 @@ using Newtonsoft.Json;
 
 [ApiController]
 [Route("api/[controller]")]
+[Authorize(Roles = "Administrador, Almacenero")]
 public class IngresosController : ControllerBase
 {
     private readonly DbContextSistema _context;
@@ -20,7 +21,6 @@ public class IngresosController : ControllerBase
 
     // GET: api/Ingresos/Listar
     [HttpGet("[action]")]
-    [Authorize(Roles = "Administrador, Almacenero")]
     public async Task<IEnumerable<IngresoViewModel>> Listar([FromQuery] PaginationParameters pagParams)
     {
         var ingresos = PagedList<Ingreso>.ToPagedList(await _context.Ingresos.Include(i => i.usuario)
@@ -57,7 +57,6 @@ public class IngresosController : ControllerBase
 
     // GET: api/Ingresos/Mostrar/2
     [HttpGet("[action]/{id}")]
-    [Authorize(Roles = "Administrador, Almacenero")]
     public async Task<ActionResult> Mostrar([FromRoute] int id) {
         if (id <= 0)
         {
@@ -242,7 +241,6 @@ public class IngresosController : ControllerBase
     
     // GET: api/Ingresos/ListarDetalles
     [HttpGet("[action]/{idIngreso}")]
-    [Authorize(Roles = "Administrador, Almacenero")]
     public async Task<IEnumerable<DetalleViewModel>> ListarDetalles([FromRoute] int idIngreso)
     {
         var detalles = await _context.DetallesIngresos.Include(a => a.articulo)
@@ -253,6 +251,58 @@ public class IngresosController : ControllerBase
             articulo = d.articulo.nombre,
             cantidad = d.cantidad,
             precio = d.precio
+        });
+    }
+
+    // PUT: api/Ingresos/Desactivar/3
+    [HttpPut("[action]/{id}")]
+    public async Task<IActionResult> Desactivar([FromRoute] int id)
+    {
+        if (id <= 0)
+        {
+            return BadRequest(new {
+                ok = false,
+                message = "El id del ingreso que ha proporcionado es inválido"
+            });
+        }
+
+        var ingreso = await _context.Ingresos.FirstOrDefaultAsync(i => i.idIngreso == id);
+
+        if (ingreso == null)
+        {
+            return BadRequest(new {
+                ok = false,
+                message = "El ingreso que busca no se encuentra en el sistema"
+            });
+        }
+
+        ingreso.estado = "Anulado";
+
+        try
+        {
+            await _context.SaveChangesAsync();
+            // Actualizar el stock del articulo
+            var detalle = await _context.DetallesIngresos.Include(a => a.articulo)
+                                                         .Where(d => d.idIngreso == id)
+                                                         .ToListAsync();
+            foreach (var det in detalle)
+            {
+                var articulo = await _context.Articulos.FirstOrDefaultAsync(a => a.idArticulo == det.articulo.idArticulo);
+                articulo.stock = det.articulo.stock-det.cantidad;
+                await _context.SaveChangesAsync();
+            }
+        }
+        catch (Exception)
+        {
+            return BadRequest(new {
+                ok = false,
+                message = "Hubo un problema al anular su ingreso, inténtelo más tarde"
+            });
+        }
+
+        return Ok(new {
+            ok = true,
+            message = "El ingreso se ha anulado correctamente"
         });
     }
 

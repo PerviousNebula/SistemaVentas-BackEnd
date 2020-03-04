@@ -29,4 +29,5 @@ public class Usuario
 
     public Rol rol { get; set; }
     public ICollection<Ingreso> ingresos { get; set; }
+    public ICollection<Venta> ventas { get; set; }
 }

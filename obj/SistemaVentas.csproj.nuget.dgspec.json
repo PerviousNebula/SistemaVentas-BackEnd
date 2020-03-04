@@ -36,9 +36,17 @@
       "frameworks": {
         "netcoreapp3.1": {
           "dependencies": {
+            "DinkToPdf": {
+              "target": "Package",
+              "version": "[1.0.8, )"
+            },
             "Microsoft.AspNetCore.Authentication.JwtBearer": {
               "target": "Package",
               "version": "[3.1.2, )"
+            },
+            "Microsoft.AspNetCore.Session": {
+              "target": "Package",
+              "version": "[2.2.0, )"
             },
             "MySql.Data.EntityFrameworkCore": {
               "target": "Package",
@@ -51,6 +59,10 @@
             "System.IdentityModel.Tokens.Jwt": {
               "target": "Package",
               "version": "[5.6.0, )"
+            },
+            "System.Runtime.Loader": {
+              "target": "Package",
+              "version": "[4.3.0, )"
             }
           },
           "imports": [

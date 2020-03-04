@@ -1,5 +1,3 @@
-using System.ComponentModel.DataAnnotations;
-
 public class ArticuloViewModel
 {
     public int idArticulo { get; set; }
