@@ -195,22 +195,41 @@ public class IngresosController : ControllerBase
         });
     }
 
-    // GET: api/Ingresos/Filtrar/1234    
-    [HttpGet("[action]/{hint}")]
-    public async Task<ActionResult> Filtrar([FromRoute] string hint, [FromQuery] PaginationParameters filterParametros)
+    // POST: api/Ingresos/Filtrar/1234    
+    [HttpPost("[action]")]
+    public async Task<ActionResult> Filtrar([FromBody] IngresoFilterModel model, [FromQuery] PaginationParameters filterParametros)
     {
-        if (string.IsNullOrEmpty(hint))
+        if (model == null)
         {
             return BadRequest(new {
                 ok = false,
-                message = "Error al filtrar, el filtro no tiene ningún caracter"
+                message = "Error al filtrar, el filtro es nulo"
             });
         }
-        var items = await _context.Ingresos.Where(i => i.serie_comprobante == hint)
-                                           .Include(i => i.usuario)
-                                           .Include(i => i.proveedor)
-                                           .ToListAsync();
+        
+        var items = await _context.Ingresos.Include(i => i.usuario).Include(i => i.proveedor).ToListAsync();
+        
+        if (items == null)
+        {
+            return NotFound(new {
+                ok = false,
+                message = "No se encontraron resultados en su búsqueda"
+            });
+        }
+
+        // Se aplican los filtros que se hayan mandado en el modelo
+        if (model.idProveedor > 0) { items = items.Where(i => i.idProveedor == model.idProveedor).ToList(); }
+        if (!string.IsNullOrEmpty(model.tipo_comprobante)) { items = items.Where(i => i.tipo_comprobante.IndexOf(model.tipo_comprobante, StringComparison.OrdinalIgnoreCase) >= 0).ToList(); }
+        if (!string.IsNullOrEmpty(model.serie_comprobante)) { items = items.Where(i => i.serie_comprobante.IndexOf(model.serie_comprobante, StringComparison.OrdinalIgnoreCase) >= 0).ToList(); }
+        if (!string.IsNullOrEmpty(model.num_comprobante)) { items = items.Where(i => i.num_comprobante.IndexOf(model.num_comprobante, StringComparison.OrdinalIgnoreCase) >= 0).ToList(); }
+        if (model.fecha_inicio != null) { items = items.Where(i => i.fecha_hora >= model.fecha_inicio).ToList(); }
+        if (model.fecha_fin != null) { items = items.Where(i => i.fecha_hora <= model.fecha_fin).ToList(); }
+        if (model.activo) { items = items.Where(i => i.estado.IndexOf("aceptado", StringComparison.OrdinalIgnoreCase) >= 0).ToList(); }
+        if (!model.activo) { items = items.Where(i => i.estado.IndexOf("anulado", StringComparison.OrdinalIgnoreCase) >= 0).ToList(); }
+
+
         var ingresos = PagedList<Ingreso>.ToPagedList(items, filterParametros.PageNumber, filterParametros.PageSize);
+        
         // Response headers para la paginación
         var metadata = new
 	    {
@@ -236,7 +255,7 @@ public class IngresosController : ControllerBase
             impuesto = i.impuesto,
             total = i.total,
             estado = i.estado
-        }));
+        }).OrderByDescending(i => i.idIngreso));
     }
     
     // GET: api/Ingresos/ListarDetalles

@@ -20,11 +20,10 @@ public class CategoriasController : ControllerBase
 
     // GET: api/Categorias/Listar
     [HttpGet("[action]")]
-    public async Task<IEnumerable<CategoriaViewModel>> Listar([FromQuery] CategoriasParametros categoriasParametros)
+    public async Task<IEnumerable<CategoriaViewModel>> Listar([FromQuery] PaginationParameters pagParams)
     {
-        var categorias = PagedList<Categoria>.ToPagedList(await _context.Categorias.OrderBy(c => c.nombre).ToListAsync(),
-                                                          categoriasParametros.PageNumber,
-                                                          categoriasParametros.PageSize);
+        var items = await _context.Categorias.OrderBy(c => c.nombre).ToListAsync();        
+        var categorias = PagedList<Categoria>.ToPagedList(items, pagParams.PageNumber, pagParams.PageSize);
         var metadata = new
 	    {
             categorias.TotalCount,
@@ -69,6 +68,8 @@ public class CategoriasController : ControllerBase
         {
             return BadRequest(ModelState);
         }
+
+        // Se valida si el identificador de la categoria que se quiere actualizar es valido
         if (model.idCategoria <= 0)
         {
             return BadRequest(new {
@@ -76,8 +77,8 @@ public class CategoriasController : ControllerBase
                 message = "La categoría que intenta actualizar no se encuentra en el sistema"
             });
         }
-        var categoria = await _context.Categorias.FirstOrDefaultAsync(c => c.idCategoria == model.idCategoria);
 
+        var categoria = await _context.Categorias.FirstOrDefaultAsync(c => c.idCategoria == model.idCategoria);
         if (categoria == null)
         {
             return NotFound(new {
@@ -102,11 +103,12 @@ public class CategoriasController : ControllerBase
             });
         }
         
-        List<CategoriaViewModel> categoriasModel = await ListaDeCategorias();
+        var categorias = await this.Listar(new PaginationParameters { PageNumber = 1, PageSize = 10});
+
         return Ok(new {
             Ok = true,
             message = "La categoría se ha actualizado exitosamente!",
-            categorias = categoriasModel
+            categorias
         });
     }
 
@@ -118,6 +120,8 @@ public class CategoriasController : ControllerBase
         {
             return BadRequest(ModelState);
         }
+
+        // Se valida si la categoria ya existe en el sistema
         var existeCategoria = await _context.Categorias.FirstOrDefaultAsync(c => c.nombre == model.nombre);
         if (existeCategoria != null)
         {
@@ -126,6 +130,7 @@ public class CategoriasController : ControllerBase
                 message = "La categoría que intenta agregar ya existe"
             });
         }
+
         Categoria categoria = new Categoria {
             nombre = model.nombre,
             descripcion = model.descripcion,
@@ -144,11 +149,12 @@ public class CategoriasController : ControllerBase
             });
         }
 
-        List<CategoriaViewModel> categoriasModel = await ListaDeCategorias();
+        var categorias = await this.Listar(new PaginationParameters {PageNumber = 1, PageSize = 10});
+        
         return Ok(new {
             Ok = true,
             message = "La categoría se ha creado exitosamente!",
-            categorias = categoriasModel
+            categorias
         });
     }
 
@@ -269,20 +275,30 @@ public class CategoriasController : ControllerBase
         });
     }
 
-    [HttpGet("[action]/{hint}")]
-    public async Task<ActionResult> Filtrar([FromRoute] string hint, [FromQuery] CategoriasParametros filterParametros)
+    // POST: api/Categorias/Filtrar
+    [HttpPost("[action]")]
+    public async Task<IActionResult> Filtrar([FromBody] CategoriaFilterModel model, [FromQuery] PaginationParameters pagParams)
     {
-        if (string.IsNullOrEmpty(hint))
+        if (model == null)
         {
             return BadRequest(new {
                 ok = false,
-                message = "Error al filtrar, el filtro no tiene ningún caracter"
+                message = "Error al filtrar, el modelo del filtro es nulo"
             });
         }
-        var items = await _context.Categorias.Where(c => c.nombre.ToLower().Contains(hint.ToLower()))
-                                             .ToListAsync();
-        var categorias = PagedList<Categoria>.ToPagedList(items, filterParametros.PageNumber, 10);
-        // Response headers para la paginación
+        var items = await _context.Categorias.Where(c =>  c.nombre.Contains(model.nombre != null ? model.nombre : string.Empty) && 
+                                                          c.descripcion.Contains(model.descripcion != null ? model.descripcion : string.Empty) && 
+                                                          c.activo == model.activo)
+                                              .OrderBy(c => c.nombre)
+                                              .ToListAsync();
+        if (items == null)
+        {
+            return NotFound(new {
+                ok = false,
+                message = "No se encontraron resultados de su búsqueda"
+            });
+        }
+        var categorias = PagedList<Categoria>.ToPagedList(items, pagParams.PageNumber, pagParams.PageSize);
         var metadata = new
 	    {
             categorias.TotalCount,
@@ -302,22 +318,4 @@ public class CategoriasController : ControllerBase
         }));
     }    
     
-    // Retornar lista completa de categorias actualizada con su respectivo model y paginación
-    public async Task<List<CategoriaViewModel>> ListaDeCategorias () {
-        // Se obtienen todas las categorias con la recien creada que se mostraran al usuarios
-        var categorias = await this.Listar(new CategoriasParametros { PageNumber = 1, PageSize = 10 });
-        
-        List<CategoriaViewModel> categoriasModel = new List<CategoriaViewModel>();
-        foreach (var item in categorias)
-        {
-            categoriasModel.Add(new CategoriaViewModel {
-                idCategoria = item.idCategoria,
-                nombre = item.nombre,
-                descripcion = item.descripcion,
-                activo = item.activo
-             });
-        }
-        return categoriasModel;
-    }
-
 }

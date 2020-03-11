@@ -1,10 +1,8 @@
+using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Runtime.Serialization.Formatters.Binary;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
@@ -162,11 +160,11 @@ public class ArticulosController : ControllerBase
             });
         }
 
-        List<ArticuloViewModel> articulosModel = await ListaDeArticulos();
+        var articulos = await this.Listar(new PaginationParameters { PageNumber = 1, PageSize = 10 });
         return Ok(new {
             ok = true,
             message = "El artículo se ha actualizado correctamente",
-            articulos = articulosModel
+            articulos
         });
     }
 
@@ -201,11 +199,11 @@ public class ArticulosController : ControllerBase
             });
         }
                 
-        List<ArticuloViewModel> articulosModel = await ListaDeArticulos();
+        var articulos = await this.Listar(new PaginationParameters { PageNumber = 1, PageSize = 10 });
         return Ok(new {
             ok = true,
             message = "El artículo se ha creado correctamente",
-            articulos = articulosModel
+            articulos
         });
     }
 
@@ -290,20 +288,36 @@ public class ArticulosController : ControllerBase
             message = "El artículo se ha activado exitosamente!"
         });
     }
-
-    [HttpGet("[action]/{hint}")]
-    public async Task<ActionResult> Filtrar([FromRoute] string hint, [FromQuery] PaginationParameters filterParametros)
+    
+    // POST: api/Articulos/Filtrar
+    [HttpPost("[action]")]
+    public async Task<ActionResult> Filtrar([FromBody] ArticuloFilterModel model, [FromQuery] PaginationParameters filterParametros)
     {
-        if (string.IsNullOrEmpty(hint))
+        if (model == null)
         {
             return BadRequest(new {
                 ok = false,
-                message = "Error al filtrar, el filtro no tiene ningún caracter"
+                message = "Error al filtrar, el filtro proporcionado es nullo"
             });
         }
-        var items = await _context.Articulos.Where(a => a.nombre.ToLower().Contains(hint.ToLower()))
-                                            .Include(a => a.categoria)
+
+        var items = await _context.Articulos.Include(a => a.categoria).Where(a => a.activo == model.activo && a.precio_venta >= model.precio_min)
                                             .ToListAsync();
+        if (items == null)
+        {
+            return NotFound(new {
+                ok = false,
+                message = "No se encontraron resultados en su búsqueda"
+            });
+        }
+        // Se aplican los filtros solamente si el usuario los mando en el modelo
+        if (!string.IsNullOrEmpty(model.nombre)) { items = items.Where(i => i.nombre.IndexOf(model.nombre, StringComparison.OrdinalIgnoreCase) >= 0).ToList(); }
+        if (!string.IsNullOrEmpty(model.descripcion)) { items = items.Where(i => i.descripcion.IndexOf(model.descripcion, StringComparison.OrdinalIgnoreCase) >= 0).ToList(); }
+        if (!string.IsNullOrEmpty(model.codigo)) { items = items.Where(i => i.codigo.IndexOf(model.codigo, StringComparison.OrdinalIgnoreCase) >= 0).ToList(); }
+        if (model.stock > 0) { items = items.Where(i => i.stock >= model.stock).ToList(); }
+        if (model.precio_max > 0) { items = items.Where(i => i.precio_venta <= model.precio_max).ToList(); }
+        if (model.idCategoria > 0) { items = items.Where(i => i.idCategoria == model.idCategoria).ToList(); }
+
         var articulos = PagedList<Articulo>.ToPagedList(items, filterParametros.PageNumber, filterParametros.PageSize);
         // Response headers para la paginación
         var metadata = new
@@ -327,30 +341,7 @@ public class ArticulosController : ControllerBase
             stock = a.stock,
             categoria = a.categoria.nombre,
             activo = a.activo
-        }));
+        }).OrderBy(a => a.nombre));
     }    
-    
-    // Retornar lista completa de articulos actualizada con su respectivo model y paginación
-    public async Task<List<ArticuloViewModel>> ListaDeArticulos () {
-        // Se obtienen todas los articulos con la recien creada que se mostraran al usuarios
-        var articulos = await this.Listar(new PaginationParameters { PageNumber = 1, PageSize = 10 });
-        
-        List<ArticuloViewModel> articulosModel = new List<ArticuloViewModel>();
-        foreach (var item in articulos)
-        {
-            articulosModel.Add(new ArticuloViewModel {
-                idArticulo = item.idArticulo,
-                idCategoria = item.idCategoria,
-                categoria = item.categoria,
-                nombre = item.nombre,
-                descripcion = item.descripcion,
-                codigo = item.codigo,
-                precio_venta = item.precio_venta,
-                stock = item.stock,
-                activo = item.activo
-             });
-        }
-        return articulosModel;
-    }
 
 }

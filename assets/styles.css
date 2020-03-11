@@ -51,5 +51,72 @@ h3 {
 h1, h2, h3, h4, h5, h6 {
     color: #455a64;
     font-family: "Montserrat", sans-serif;
-    font-weight: 400;
+    font-weight: bold;
+}
+
+/* Create two equal columns that floats next to each other */
+.column {
+    float: left;
+    width: 33.33%;
+}
+  
+/* Clear floats after the columns */
+.row:after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+.text-center {
+    text-align: center !important;
+}
+
+.text-right {
+    text-align: right !important;
+}
+
+.mt-1 {
+   margin-top: 10px !important;
+}
+
+.mt-2 {
+    margin-top: 20px !important;
+}
+
+.mt-4 {
+    margin-top: 40px !important;
+}
+
+.d-block {
+    display: block !important;
+}
+
+.float-right {
+    float: right !important;
+}
+
+.list-group {
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    padding-left: 0;
+    margin-bottom: 0;
+}
+
+.bd-example>.list-group {
+    max-width: 400px;
+}
+
+.list-group-item:first-child {
+    border-top-left-radius: .25rem;
+    border-top-right-radius: .25rem;
+}
+
+.list-group-item {
+    position: relative;
+    display: block;
+    padding: .75rem 1.25rem;
+    background-color: #fff;
+    border: 1px solid rgba(0,0,0,.125);
 }

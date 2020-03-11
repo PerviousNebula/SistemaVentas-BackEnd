@@ -20,6 +20,15 @@
           "lib/netstandard1.6/DinkToPdf.dll": {}
         }
       },
+      "ExcelLibrary/1.2011.7.31": {
+        "type": "package",
+        "compile": {
+          "lib/ExcelLibrary.dll": {}
+        },
+        "runtime": {
+          "lib/ExcelLibrary.dll": {}
+        }
+      },
       "Microsoft.AspNetCore.Authentication.JwtBearer/3.1.2": {
         "type": "package",
         "dependencies": {
@@ -1767,6 +1776,18 @@
         "lib/netstandard1.6/DinkToPdf.dll",
         "lib/netstandard1.6/DinkToPdf.pdb",
         "lib/netstandard1.6/DinkToPdf.xml"
+      ]
+    },
+    "ExcelLibrary/1.2011.7.31": {
+      "sha512": "ogX1mzqe1Ek3Z0AdER4B4QBJoBkt90Mfe0LnyiPg/uP+iZ7rx+9fFXbsZjOlPsS0xNn8sFeesvNnfEnuthudrQ==",
+      "type": "package",
+      "path": "excellibrary/1.2011.7.31",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "excellibrary.1.2011.7.31.nupkg.sha512",
+        "excellibrary.nuspec",
+        "lib/ExcelLibrary.dll"
       ]
     },
     "Microsoft.AspNetCore.Authentication.JwtBearer/3.1.2": {
@@ -6094,6 +6115,7 @@
   "projectFileDependencyGroups": {
     ".NETCoreApp,Version=v3.1": [
       "DinkToPdf >= 1.0.8",
+      "ExcelLibrary >= 1.2011.7.31",
       "Microsoft.AspNetCore.Authentication.JwtBearer >= 3.1.2",
       "Microsoft.AspNetCore.Session >= 2.2.0",
       "MySql.Data.EntityFrameworkCore >= 6.10.8",
@@ -6141,6 +6163,10 @@
             "target": "Package",
             "version": "[1.0.8, )"
           },
+          "ExcelLibrary": {
+            "target": "Package",
+            "version": "[1.2011.7.31, )"
+          },
           "Microsoft.AspNetCore.Authentication.JwtBearer": {
             "target": "Package",
             "version": "[3.1.2, )"
@@ -6187,5 +6213,17 @@
         "runtimeIdentifierGraphPath": "/usr/share/dotnet/sdk/3.1.101/RuntimeIdentifierGraph.json"
       }
     }
-  }
+  },
+  "logs": [
+    {
+      "code": "NU1701",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Package 'ExcelLibrary 1.2011.7.31' was restored using '.NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8' instead of the project target framework '.NETCoreApp,Version=v3.1'. This package may not be fully compatible with your project.",
+      "libraryId": "ExcelLibrary",
+      "targetGraphs": [
+        ".NETCoreApp,Version=v3.1"
+      ]
+    }
+  ]
 }

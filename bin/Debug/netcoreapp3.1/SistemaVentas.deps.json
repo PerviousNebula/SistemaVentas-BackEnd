@@ -25,6 +25,7 @@
       "SistemaVentas/1.0.0": {
         "dependencies": {
           "DinkToPdf": "1.0.8",
+          "ExcelLibrary": "1.2011.7.31",
           "Microsoft.AspNetCore.Authentication.JwtBearer": "3.1.2",
           "Microsoft.AspNetCore.Session": "2.2.0",
           "MySql.Data.EntityFrameworkCore": "6.10.8",
@@ -339,6 +340,17 @@
         },
         "compile": {
           "lib/netstandard1.6/DinkToPdf.dll": {}
+        }
+      },
+      "ExcelLibrary/1.2011.7.31": {
+        "runtime": {
+          "lib/ExcelLibrary.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        },
+        "compile": {
+          "lib/ExcelLibrary.dll": {}
         }
       },
       "Microsoft.AspNetCore.Authentication.JwtBearer/3.1.2": {
@@ -3107,6 +3119,13 @@
       "sha512": "sha512-wJDlcNXjQ+OnBFwh3LBeAXgrXqlKl0RsgN60XpxEFbyqzdaG9ASb5HTXQjXQPaBguSCOrGZZESPnpcng34TEkw==",
       "path": "dinktopdf/1.0.8",
       "hashPath": "dinktopdf.1.0.8.nupkg.sha512"
+    },
+    "ExcelLibrary/1.2011.7.31": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-ogX1mzqe1Ek3Z0AdER4B4QBJoBkt90Mfe0LnyiPg/uP+iZ7rx+9fFXbsZjOlPsS0xNn8sFeesvNnfEnuthudrQ==",
+      "path": "excellibrary/1.2011.7.31",
+      "hashPath": "excellibrary.1.2011.7.31.nupkg.sha512"
     },
     "Microsoft.AspNetCore.Authentication.JwtBearer/3.1.2": {
       "type": "package",

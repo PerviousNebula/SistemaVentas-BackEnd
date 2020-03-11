@@ -40,6 +40,10 @@
               "target": "Package",
               "version": "[1.0.8, )"
             },
+            "ExcelLibrary": {
+              "target": "Package",
+              "version": "[1.2011.7.31, )"
+            },
             "Microsoft.AspNetCore.Authentication.JwtBearer": {
               "target": "Package",
               "version": "[3.1.2, )"

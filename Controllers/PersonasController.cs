@@ -205,9 +205,8 @@ public class PersonasController : ControllerBase
                 message = "Error al filtrar, el filtro no tiene ningún caracter"
             });
         }
-        var items = await _context.Personas.Where(c => c.nombre.ToLower().Contains(hint.ToLower()) &&
-                                                       c.tipo_persona == "Cliente"
-                                                ).ToListAsync();
+        var items = await _context.Personas.Where(c => c.nombre.ToLower().Contains(hint.ToLower()) && c.tipo_persona == "Cliente")
+                                           .ToListAsync();
         var personas = PagedList<Persona>.ToPagedList(items, filterParametros.PageNumber, 10);
         // Response headers para la paginación
         var metadata = new
@@ -235,18 +234,30 @@ public class PersonasController : ControllerBase
     
     // GET: api/Personas/FiltrarClientes/arturo
     [Authorize(Roles = "Administrador, Almacenero")]
-    [HttpGet("[action]/{hint}")]
-    public async Task<ActionResult> FiltrarProveedores([FromRoute] string hint, [FromQuery] PaginationParameters filterParametros)
+    [HttpPost("[action]")]
+    public async Task<ActionResult> FiltrarProveedores([FromBody] ProveedorFilterModel model, [FromQuery] PaginationParameters filterParametros)
     {
-        if (string.IsNullOrEmpty(hint))
+        if (model == null)
         {
             return BadRequest(new {
                 ok = false,
-                message = "Error al filtrar, el filtro no tiene ningún caracter"
+                message = "Error al filtrar, el filtro es nulo"
             });
         }
-        var items = await _context.Personas.Where(c => c.nombre.ToLower().Contains(hint.ToLower()) && c.tipo_persona == "proveedor")
-                                           .ToListAsync();
+        var items = await _context.Personas.Where(c => c.tipo_persona == "proveedor").ToListAsync();
+        
+        if (items == null)
+        {
+            return NotFound(new {
+                ok = false,
+                message = "No se encontraron resultados en su busqueda"
+            });
+        }
+        if (!string.IsNullOrEmpty(model.nombre)) { items = items.Where(i => i.nombre.IndexOf(model.nombre, StringComparison.OrdinalIgnoreCase) >= 0).ToList(); }
+        if (!string.IsNullOrEmpty(model.direccion)) { items = items.Where(i => i.direccion.IndexOf(model.direccion, StringComparison.OrdinalIgnoreCase) >= 0).ToList(); }
+        if (!string.IsNullOrEmpty(model.telefono)) { items = items.Where(i => i.telefono.IndexOf(model.telefono, StringComparison.OrdinalIgnoreCase) >= 0).ToList(); }
+        if (!string.IsNullOrEmpty(model.email)) { items = items.Where(i => i.nombre.IndexOf(model.email, StringComparison.OrdinalIgnoreCase) >= 0).ToList(); }
+
         var personas = PagedList<Persona>.ToPagedList(items, filterParametros.PageNumber, 10);
         // Response headers para la paginación
         var metadata = new
