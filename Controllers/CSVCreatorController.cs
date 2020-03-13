@@ -147,7 +147,7 @@ public class CSVCreatorController : ControllerBase
         
         string fileName = "reporte_inventario.xls";
         Workbook workbook = new Workbook();
-        Worksheet worksheet = new Worksheet("Articulos");
+        Worksheet worksheet = new Worksheet("Ingresos");
         
         // Cabecera de la hoja de Excel
         worksheet.Cells[0, 0] = new Cell("Usuario");
@@ -200,7 +200,7 @@ public class CSVCreatorController : ControllerBase
         
         string fileName = "reporte_inventario.xls";
         Workbook workbook = new Workbook();
-        Worksheet worksheet = new Worksheet("Articulos");
+        Worksheet worksheet = new Worksheet("Proveedores");
         
         // Cabecera de la hoja de Excel
         worksheet.Cells[0, 0] = new Cell("Nombre");
@@ -221,4 +221,107 @@ public class CSVCreatorController : ControllerBase
         workbook.SaveToStream(m);
         return File(m.ToArray(), "application/vnd.ms-excel", fileName);
     }
+
+    [HttpGet("[action]")]
+    public async Task<IActionResult> Ventas([FromQuery] VentaFilterModel filter, bool filtered = true)
+    {
+        var items = await _context.Ventas.Include(v => v.usuario).Include(v => v.persona).OrderByDescending(i => i.idVenta).ToListAsync();
+
+        if (items == null)
+        {
+            return NotFound(new {
+                ok = false,
+                message = "No se encontraron resultados en su busqueda"
+            });
+        }
+        
+        if (filtered)
+        {
+            if (filter.idCliente > 0) { items = items.Where(i => i.idPersona == filter.idCliente).ToList(); }
+            if (!string.IsNullOrEmpty(filter.tipo_comprobante)) { items = items.Where(i => i.tipo_comprobante.IndexOf(filter.tipo_comprobante, StringComparison.OrdinalIgnoreCase) >= 0).ToList(); }
+            if (!string.IsNullOrEmpty(filter.serie_comprobante)) { items = items.Where(i => i.serie_comprobante.IndexOf(filter.serie_comprobante, StringComparison.OrdinalIgnoreCase) >= 0).ToList(); }
+            if (!string.IsNullOrEmpty(filter.num_comprobante)) { items = items.Where(i => i.num_comprobante.IndexOf(filter.num_comprobante, StringComparison.OrdinalIgnoreCase) >= 0).ToList(); }
+            if (filter.fecha_inicio != null) { items = items.Where(i => i.fecha_hora >= filter.fecha_inicio).ToList(); }
+            if (filter.fecha_fin != null) { items = items.Where(i => i.fecha_hora <= filter.fecha_fin).ToList(); }
+            if (filter.activo) { items = items.Where(i => i.estado.IndexOf("aceptado", StringComparison.OrdinalIgnoreCase) >= 0).ToList(); }
+            if (!filter.activo) { items = items.Where(i => i.estado.IndexOf("anulado", StringComparison.OrdinalIgnoreCase) >= 0).ToList(); }
+        }
+
+        string fileName = "reporte_inventario.xls";
+        Workbook workbook = new Workbook();
+        Worksheet worksheet = new Worksheet("Ventas");
+        
+        // Cabecera de la hoja de Excel
+        worksheet.Cells[0, 0] = new Cell("Usuario");
+        worksheet.Cells[0, 1] = new Cell("Cliente");
+        worksheet.Cells[0, 2] = new Cell("Tipo Comprobante");
+        worksheet.Cells[0, 3] = new Cell("Serie Comprobante");
+        worksheet.Cells[0, 4] = new Cell("No. Comprobante");
+        worksheet.Cells[0, 5] = new Cell("Fecha");
+        worksheet.Cells[0, 6] = new Cell("Total");
+        worksheet.Cells[0, 7] = new Cell("Estado");
+
+        // Cuerpo de la hoja de Excel
+        for (int i = 0; i < items.Count; i++)
+        {
+            worksheet.Cells[i+1, 0] = new Cell(items[i].usuario.nombre);
+            worksheet.Cells[i+1, 1] = new Cell(items[i].persona.nombre);
+            worksheet.Cells[i+1, 2] = new Cell(items[i].tipo_comprobante);
+            worksheet.Cells[i+1, 3] = new Cell(items[i].serie_comprobante);
+            worksheet.Cells[i+1, 4] = new Cell(items[i].num_comprobante);
+            worksheet.Cells[i+1, 5] = new Cell(items[i].fecha_hora.ToShortDateString());
+            worksheet.Cells[i+1, 6] = new Cell("$" + items[i].total);
+            worksheet.Cells[i+1, 7] = new Cell(items[i].estado.ToUpper());
+        }
+        workbook.Worksheets.Add(worksheet);
+        MemoryStream m = new MemoryStream();
+        workbook.SaveToStream(m);
+        return File(m.ToArray(), "application/vnd.ms-excel", fileName);
+    }
+
+    [HttpGet("[action]")]
+    public async Task<IActionResult> Clientes([FromQuery] ClientesFilterModel filter, bool filtered = true)
+    {
+        var items = await _context.Personas.Where(c => c.tipo_persona == "Cliente").ToListAsync();
+
+        if (items == null)
+        {
+            return NotFound(new {
+                ok = false,
+                message = "No se encontraron resultados en su busqueda"
+            });
+        }
+        
+        if (filtered)
+        {
+            if (!string.IsNullOrEmpty(filter.nombre)) { items = items.Where(i => i.nombre.IndexOf(filter.nombre, StringComparison.OrdinalIgnoreCase) >= 0).ToList(); }
+            if (!string.IsNullOrEmpty(filter.direccion)) { items = items.Where(i => i.direccion.IndexOf(filter.direccion, StringComparison.OrdinalIgnoreCase) >= 0).ToList(); }
+            if (!string.IsNullOrEmpty(filter.telefono)) { items = items.Where(i => i.telefono.IndexOf(filter.telefono, StringComparison.OrdinalIgnoreCase) >= 0).ToList(); }
+            if (!string.IsNullOrEmpty(filter.email)) { items = items.Where(i => i.email.IndexOf(filter.email, StringComparison.OrdinalIgnoreCase) >= 0).ToList(); }
+        }
+
+        string fileName = "reporte_inventario.xls";
+        Workbook workbook = new Workbook();
+        Worksheet worksheet = new Worksheet("Clientes");
+        
+        // Cabecera de la hoja de Excel
+        worksheet.Cells[0, 0] = new Cell("Nombre");
+        worksheet.Cells[0, 1] = new Cell("Dirección");
+        worksheet.Cells[0, 2] = new Cell("Teléfono");
+        worksheet.Cells[0, 3] = new Cell("Email");
+
+        // Cuerpo de la hoja de Excel
+        for (int i = 0; i < items.Count; i++)
+        {
+            worksheet.Cells[i+1, 0] = new Cell(items[i].nombre);
+            worksheet.Cells[i+1, 1] = new Cell(items[i].direccion);
+            worksheet.Cells[i+1, 2] = new Cell(items[i].telefono);
+            worksheet.Cells[i+1, 3] = new Cell(items[i].email);
+        }
+        workbook.Worksheets.Add(worksheet);
+        MemoryStream m = new MemoryStream();
+        workbook.SaveToStream(m);
+        return File(m.ToArray(), "application/vnd.ms-excel", fileName);
+    }
+
 }

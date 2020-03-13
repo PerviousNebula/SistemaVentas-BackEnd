@@ -32,7 +32,9 @@ public class PdfCreatorController : ControllerBase
             Margins = new MarginSettings { Top = 10 },
             DocumentTitle = "Reporte de Inventariado"
         };
+        
         var items = await _context.Articulos.Include(a => a.categoria).ToListAsync();
+        
         if (items == null)
         {
             return NotFound(new {
@@ -52,6 +54,7 @@ public class PdfCreatorController : ControllerBase
             if (filter.idCategoria > 0) { items = items.Where(i => i.idCategoria == filter.idCategoria).ToList(); }
             items = items.Where(i => i.activo == filter.activo).ToList();
         }
+        
         var model = items.Select(art => new ArticuloPDF {
             nombre = art.nombre,
             categoria = art.categoria.nombre,
@@ -304,7 +307,7 @@ public class PdfCreatorController : ControllerBase
     }
 
     [HttpGet("[action]")]
-    public async Task<IActionResult> Ventas([FromQuery] string filter)
+    public async Task<IActionResult> Ventas([FromQuery] VentaFilterModel filter, bool filtered = true)
     {
         var globalSettings = new GlobalSettings
         {
@@ -315,14 +318,28 @@ public class PdfCreatorController : ControllerBase
             DocumentTitle = "Reporte de Inventariado"
         };
 
-        var items = (string.IsNullOrEmpty(filter)) ? await _context.Ventas.Include(v => v.usuario)
-                                                                          .Include(v => v.persona)
-                                                                          .OrderByDescending(v => v.idVenta)
-                                                                          .ToListAsync()
-                                                   : await _context.Ventas.Where(v => v.serie_comprobante == filter)
-                                                                          .Include(v => v.usuario)
-                                                                          .Include(v => v.persona)
-                                                                          .ToListAsync();
+        var items = await _context.Ventas.Include(v => v.usuario).Include(v => v.persona).OrderByDescending(i => i.idVenta).ToListAsync();
+
+        if (items == null)
+        {
+            return NotFound(new {
+                ok = false,
+                message = "No se encontraron resultados en su búsqueda"
+            });
+        }
+
+        if (filtered)
+        {
+            if (filter.idCliente > 0) { items = items.Where(i => i.idPersona == filter.idCliente).ToList(); }
+            if (!string.IsNullOrEmpty(filter.tipo_comprobante)) { items = items.Where(i => i.tipo_comprobante.IndexOf(filter.tipo_comprobante, StringComparison.OrdinalIgnoreCase) >= 0).ToList(); }
+            if (!string.IsNullOrEmpty(filter.serie_comprobante)) { items = items.Where(i => i.serie_comprobante.IndexOf(filter.serie_comprobante, StringComparison.OrdinalIgnoreCase) >= 0).ToList(); }
+            if (!string.IsNullOrEmpty(filter.num_comprobante)) { items = items.Where(i => i.num_comprobante.IndexOf(filter.num_comprobante, StringComparison.OrdinalIgnoreCase) >= 0).ToList(); }
+            if (filter.fecha_inicio != null) { items = items.Where(i => i.fecha_hora >= filter.fecha_inicio).ToList(); }
+            if (filter.fecha_fin != null) { items = items.Where(i => i.fecha_hora <= filter.fecha_fin).ToList(); }
+            if (filter.activo) { items = items.Where(i => i.estado.IndexOf("aceptado", StringComparison.OrdinalIgnoreCase) >= 0).ToList(); }
+            if (!filter.activo) { items = items.Where(i => i.estado.IndexOf("anulado", StringComparison.OrdinalIgnoreCase) >= 0).ToList(); }
+        }
+
         var model = items.Select(v => new VentasPDF {
             cliente = v.persona.nombre,
             usuario = v.usuario.nombre,
@@ -447,7 +464,7 @@ public class PdfCreatorController : ControllerBase
     }
     
     [HttpGet("[action]")]
-    public async Task<IActionResult> Clientes([FromQuery] string filter)
+    public async Task<IActionResult> Clientes([FromQuery] ClientesFilterModel filter, bool filtered = true)
     {
         var globalSettings = new GlobalSettings
         {
@@ -458,11 +475,23 @@ public class PdfCreatorController : ControllerBase
             DocumentTitle = "Reporte de Inventariado"
         };
 
-        var items = (string.IsNullOrEmpty(filter)) ? await _context.Personas.Where(p => p.tipo_persona == "Cliente")
-                                                                            .OrderBy(r => r.nombre)
-                                                                            .ToListAsync()
-                                                   : await _context.Personas.Where(c => c.nombre.ToLower().Contains(filter.ToLower()) && c.tipo_persona == "Cliente")
-                                                                            .ToListAsync();
+        var items = await _context.Personas.Where(c => c.tipo_persona == "Cliente").ToListAsync();
+
+        if (items == null)
+        {
+            return NotFound(new {
+                ok = false,
+                message = "No se encontraron resultados en su búsqueda"
+            });
+        }
+
+        if (filtered)
+        {
+            if (!string.IsNullOrEmpty(filter.nombre)) { items = items.Where(i => i.nombre.IndexOf(filter.nombre, StringComparison.OrdinalIgnoreCase) >= 0).ToList(); }
+            if (!string.IsNullOrEmpty(filter.direccion)) { items = items.Where(i => i.direccion.IndexOf(filter.direccion, StringComparison.OrdinalIgnoreCase) >= 0).ToList(); }
+            if (!string.IsNullOrEmpty(filter.telefono)) { items = items.Where(i => i.telefono.IndexOf(filter.telefono, StringComparison.OrdinalIgnoreCase) >= 0).ToList(); }
+            if (!string.IsNullOrEmpty(filter.email)) { items = items.Where(i => i.email.IndexOf(filter.email, StringComparison.OrdinalIgnoreCase) >= 0).ToList(); }
+        }
         var model = items.Select(c => new ClientesPDF {
             nombre = c.nombre,
             tipo_persona = c.tipo_persona,

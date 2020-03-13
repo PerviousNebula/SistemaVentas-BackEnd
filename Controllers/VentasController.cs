@@ -2,12 +2,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 
 [Route("api/[controller]")]
 [ApiController]
+[Authorize(Roles = "Administrador, Vendedor")]
 public class VentasController : ControllerBase
 {
     private readonly DbContextSistema _context;
@@ -219,21 +221,36 @@ public class VentasController : ControllerBase
         });
     }
     
-    // GET: api/Ventas/Filtrar/1234
-    [HttpGet("[action]/{hint}")]
-    public async Task<ActionResult> Filtrar([FromRoute] string hint, [FromQuery] PaginationParameters filterParametros)
+    // GET: api/Ventas/Filtrar
+    [HttpPost("[action]")]
+    public async Task<ActionResult> Filtrar([FromBody] VentaFilterModel model, [FromQuery] PaginationParameters filterParametros)
     {
-        if (string.IsNullOrEmpty(hint))
+        if (model == null)
         {
             return BadRequest(new {
                 ok = false,
-                message = "Error al filtrar, el filtro no tiene ningún caracter"
+                message = "Error al filtrar, el filtro es nulo"
             });
         }
-        var items = await _context.Ventas.Where(v => v.serie_comprobante == hint)
-                                           .Include(v => v.usuario)
-                                           .Include(v => v.persona)
-                                           .ToListAsync();
+        var items = await _context.Ventas.Include(v => v.usuario).Include(v => v.persona).ToListAsync();
+
+        if (items == null)
+        {
+            return NotFound(new {
+                ok = false,
+                message = "No se encontraron resultados en su búsqueda"
+            });
+        }
+
+        if (model.idCliente > 0) { items = items.Where(i => i.idPersona == model.idCliente).ToList(); }
+        if (!string.IsNullOrEmpty(model.tipo_comprobante)) { items = items.Where(i => i.tipo_comprobante.IndexOf(model.tipo_comprobante, StringComparison.OrdinalIgnoreCase) >= 0).ToList(); }
+        if (!string.IsNullOrEmpty(model.serie_comprobante)) { items = items.Where(i => i.serie_comprobante.IndexOf(model.serie_comprobante, StringComparison.OrdinalIgnoreCase) >= 0).ToList(); }
+        if (!string.IsNullOrEmpty(model.num_comprobante)) { items = items.Where(i => i.num_comprobante.IndexOf(model.num_comprobante, StringComparison.OrdinalIgnoreCase) >= 0).ToList(); }
+        if (model.fecha_inicio != null) { items = items.Where(i => i.fecha_hora >= model.fecha_inicio).ToList(); }
+        if (model.fecha_fin != null) { items = items.Where(i => i.fecha_hora <= model.fecha_fin).ToList(); }
+        if (model.activo) { items = items.Where(i => i.estado.IndexOf("aceptado", StringComparison.OrdinalIgnoreCase) >= 0).ToList(); }
+        if (!model.activo) { items = items.Where(i => i.estado.IndexOf("anulado", StringComparison.OrdinalIgnoreCase) >= 0).ToList(); }
+
         var ventas = PagedList<Venta>.ToPagedList(items, filterParametros.PageNumber, filterParametros.PageSize);
         // Response headers para la paginación
         var metadata = new
