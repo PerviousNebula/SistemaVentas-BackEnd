@@ -165,21 +165,19 @@ public class UsuariosController : ControllerBase
     [HttpPut("[action]")]
     public async Task<IActionResult> Actualizar([FromBody] UsuariosActualizarModel model)
     {
-        if (!ModelState.IsValid)
+        if (!ModelState.IsValid) 
         {
             return BadRequest(ModelState);
         }
-
         if (model.idUsuario <= 0)
         {
             return BadRequest(new {
                 ok = false,
-                message = "El id del usuario proporcionado es inválido"
+                message = "El id del usuario proporcionado es inválido" 
             });
         }
 
         var usuario = await _context.Usuarios.FirstOrDefaultAsync(u => u.idUsuario == model.idUsuario);
-
         if (usuario == null)
         {
             return NotFound(new {
@@ -211,7 +209,7 @@ public class UsuariosController : ControllerBase
         {
             return BadRequest(new {
                 ok = false,
-                message = "Hubo un problema al crear su artículo, inténtelo más tarde"
+                message = "Hubo un problema al crear su artículo, inténtelo más tarde" 
             });
         }
 
@@ -226,7 +224,7 @@ public class UsuariosController : ControllerBase
 
     [HttpPost("[action]")]
     [Authorize(Roles = "Administrador, Almacenero, Vendedor")]
-    public ActionResult UploadProfilePic([FromForm] UsuariosImgModel file)
+    public ActionResult UploadProfilePic([FromForm] UsuariosImgModel file, [FromForm] int idUsuario)
     {
         string fileName = String.Empty;
         try
@@ -241,10 +239,13 @@ public class UsuariosController : ControllerBase
                     file.image.CopyTo(fileStream);
                 }
             }
+            var usuario = _context.Usuarios.FirstOrDefault(u => u.idUsuario == idUsuario);
+            usuario.imgUrl = "http://" + HttpContext.Request.Host.Value + "/images/" + fileName;
+            _context.SaveChanges();
             return Ok(new {
                 ok = true,
-                message = "La imagen ha sido cargada exitosamente!",
-                imgUrl =  "/images/" + fileName
+                message = "La imagen ha sido actualizada exitosamente!",
+                imgUrl =  usuario.imgUrl
             });
         }
         catch (Exception)
@@ -430,7 +431,7 @@ public class UsuariosController : ControllerBase
             new Claim("rol", usuario.rol.nombre),
             new Claim("nombre", usuario.nombre),
             new Claim("email", usuario.email),
-            new Claim("img", usuario.imgUrl != null ? usuario.imgUrl : "")
+            new Claim("imgUrl", usuario.imgUrl != null ? usuario.imgUrl : "")
         };
 
         List<MenuViewModel> menu = await obtenerMenu(usuario.idRol);
@@ -450,6 +451,7 @@ public class UsuariosController : ControllerBase
     }
 
     [HttpGet("[action]")]
+    [Authorize(Roles = "Administrador, Almacenero, Vendedor")]
     public async Task<List<MenuViewModel>> obtenerMenu(int idRol)
     {
         // Menu del admin sale al revez

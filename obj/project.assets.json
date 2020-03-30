@@ -6130,11 +6130,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/home/arturo/Desktop/dotNET/SistemaVentas/SistemaVentas.csproj",
+      "projectUniqueName": "/home/arturo/Documents/Web/Udemy/Desarrolla sistemas Web en ASP Net Core, SQL Server y Vuejs/SistemaVentas/SistemaVentas.csproj",
       "projectName": "SistemaVentas",
-      "projectPath": "/home/arturo/Desktop/dotNET/SistemaVentas/SistemaVentas.csproj",
+      "projectPath": "/home/arturo/Documents/Web/Udemy/Desarrolla sistemas Web en ASP Net Core, SQL Server y Vuejs/SistemaVentas/SistemaVentas.csproj",
       "packagesPath": "/home/arturo/.nuget/packages/",
-      "outputPath": "/home/arturo/Desktop/dotNET/SistemaVentas/obj/",
+      "outputPath": "/home/arturo/Documents/Web/Udemy/Desarrolla sistemas Web en ASP Net Core, SQL Server y Vuejs/SistemaVentas/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "/home/arturo/.nuget/NuGet/NuGet.Config"

@@ -38,3 +38,83 @@
 /home/arturo/Desktop/dotNET/SistemaVentas/bin/Debug/netcoreapp3.1/runtimes/win/lib/netcoreapp2.1/System.Security.Cryptography.Pkcs.dll
 /home/arturo/Desktop/dotNET/SistemaVentas/bin/Debug/netcoreapp3.1/DinkToPdf.dll
 /home/arturo/Desktop/dotNET/SistemaVentas/bin/Debug/netcoreapp3.1/ExcelLibrary.dll
+/home/arturo/Documents/Web/Udemy/Desarrolla sistemas Web en ASP Net Core, SQL Server y Vuejs/SistemaVentas/bin/Debug/netcoreapp3.1/appsettings.Development.json
+/home/arturo/Documents/Web/Udemy/Desarrolla sistemas Web en ASP Net Core, SQL Server y Vuejs/SistemaVentas/bin/Debug/netcoreapp3.1/appsettings.json
+/home/arturo/Documents/Web/Udemy/Desarrolla sistemas Web en ASP Net Core, SQL Server y Vuejs/SistemaVentas/bin/Debug/netcoreapp3.1/Properties/launchSettings.json
+/home/arturo/Documents/Web/Udemy/Desarrolla sistemas Web en ASP Net Core, SQL Server y Vuejs/SistemaVentas/bin/Debug/netcoreapp3.1/SistemaVentas
+/home/arturo/Documents/Web/Udemy/Desarrolla sistemas Web en ASP Net Core, SQL Server y Vuejs/SistemaVentas/bin/Debug/netcoreapp3.1/SistemaVentas.deps.json
+/home/arturo/Documents/Web/Udemy/Desarrolla sistemas Web en ASP Net Core, SQL Server y Vuejs/SistemaVentas/bin/Debug/netcoreapp3.1/SistemaVentas.runtimeconfig.json
+/home/arturo/Documents/Web/Udemy/Desarrolla sistemas Web en ASP Net Core, SQL Server y Vuejs/SistemaVentas/bin/Debug/netcoreapp3.1/SistemaVentas.runtimeconfig.dev.json
+/home/arturo/Documents/Web/Udemy/Desarrolla sistemas Web en ASP Net Core, SQL Server y Vuejs/SistemaVentas/bin/Debug/netcoreapp3.1/SistemaVentas.dll
+/home/arturo/Documents/Web/Udemy/Desarrolla sistemas Web en ASP Net Core, SQL Server y Vuejs/SistemaVentas/bin/Debug/netcoreapp3.1/SistemaVentas.pdb
+/home/arturo/Documents/Web/Udemy/Desarrolla sistemas Web en ASP Net Core, SQL Server y Vuejs/SistemaVentas/bin/Debug/netcoreapp3.1/DinkToPdf.dll
+/home/arturo/Documents/Web/Udemy/Desarrolla sistemas Web en ASP Net Core, SQL Server y Vuejs/SistemaVentas/bin/Debug/netcoreapp3.1/ExcelLibrary.dll
+/home/arturo/Documents/Web/Udemy/Desarrolla sistemas Web en ASP Net Core, SQL Server y Vuejs/SistemaVentas/bin/Debug/netcoreapp3.1/Microsoft.AspNetCore.Authentication.JwtBearer.dll
+/home/arturo/Documents/Web/Udemy/Desarrolla sistemas Web en ASP Net Core, SQL Server y Vuejs/SistemaVentas/bin/Debug/netcoreapp3.1/Microsoft.EntityFrameworkCore.dll
+/home/arturo/Documents/Web/Udemy/Desarrolla sistemas Web en ASP Net Core, SQL Server y Vuejs/SistemaVentas/bin/Debug/netcoreapp3.1/Microsoft.EntityFrameworkCore.Relational.dll
+/home/arturo/Documents/Web/Udemy/Desarrolla sistemas Web en ASP Net Core, SQL Server y Vuejs/SistemaVentas/bin/Debug/netcoreapp3.1/Microsoft.IdentityModel.JsonWebTokens.dll
+/home/arturo/Documents/Web/Udemy/Desarrolla sistemas Web en ASP Net Core, SQL Server y Vuejs/SistemaVentas/bin/Debug/netcoreapp3.1/Microsoft.IdentityModel.Logging.dll
+/home/arturo/Documents/Web/Udemy/Desarrolla sistemas Web en ASP Net Core, SQL Server y Vuejs/SistemaVentas/bin/Debug/netcoreapp3.1/Microsoft.IdentityModel.Protocols.dll
+/home/arturo/Documents/Web/Udemy/Desarrolla sistemas Web en ASP Net Core, SQL Server y Vuejs/SistemaVentas/bin/Debug/netcoreapp3.1/Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
+/home/arturo/Documents/Web/Udemy/Desarrolla sistemas Web en ASP Net Core, SQL Server y Vuejs/SistemaVentas/bin/Debug/netcoreapp3.1/Microsoft.IdentityModel.Tokens.dll
+/home/arturo/Documents/Web/Udemy/Desarrolla sistemas Web en ASP Net Core, SQL Server y Vuejs/SistemaVentas/bin/Debug/netcoreapp3.1/MySql.Data.dll
+/home/arturo/Documents/Web/Udemy/Desarrolla sistemas Web en ASP Net Core, SQL Server y Vuejs/SistemaVentas/bin/Debug/netcoreapp3.1/MySql.Data.EntityFrameworkCore.dll
+/home/arturo/Documents/Web/Udemy/Desarrolla sistemas Web en ASP Net Core, SQL Server y Vuejs/SistemaVentas/bin/Debug/netcoreapp3.1/Newtonsoft.Json.dll
+/home/arturo/Documents/Web/Udemy/Desarrolla sistemas Web en ASP Net Core, SQL Server y Vuejs/SistemaVentas/bin/Debug/netcoreapp3.1/Remotion.Linq.dll
+/home/arturo/Documents/Web/Udemy/Desarrolla sistemas Web en ASP Net Core, SQL Server y Vuejs/SistemaVentas/bin/Debug/netcoreapp3.1/System.Configuration.ConfigurationManager.dll
+/home/arturo/Documents/Web/Udemy/Desarrolla sistemas Web en ASP Net Core, SQL Server y Vuejs/SistemaVentas/bin/Debug/netcoreapp3.1/System.IdentityModel.Tokens.Jwt.dll
+/home/arturo/Documents/Web/Udemy/Desarrolla sistemas Web en ASP Net Core, SQL Server y Vuejs/SistemaVentas/bin/Debug/netcoreapp3.1/System.Interactive.Async.dll
+/home/arturo/Documents/Web/Udemy/Desarrolla sistemas Web en ASP Net Core, SQL Server y Vuejs/SistemaVentas/bin/Debug/netcoreapp3.1/System.Security.Cryptography.Pkcs.dll
+/home/arturo/Documents/Web/Udemy/Desarrolla sistemas Web en ASP Net Core, SQL Server y Vuejs/SistemaVentas/bin/Debug/netcoreapp3.1/System.Security.Cryptography.ProtectedData.dll
+/home/arturo/Documents/Web/Udemy/Desarrolla sistemas Web en ASP Net Core, SQL Server y Vuejs/SistemaVentas/bin/Debug/netcoreapp3.1/runtimes/win/lib/netcoreapp2.1/System.Security.Cryptography.Pkcs.dll
+/home/arturo/Documents/Web/Udemy/Desarrolla sistemas Web en ASP Net Core, SQL Server y Vuejs/SistemaVentas/bin/Debug/netcoreapp3.1/runtimes/win/lib/netstandard2.0/System.Security.Cryptography.ProtectedData.dll
+/home/arturo/Documents/Web/Udemy/Desarrolla sistemas Web en ASP Net Core, SQL Server y Vuejs/SistemaVentas/obj/Debug/netcoreapp3.1/SistemaVentas.csprojAssemblyReference.cache
+/home/arturo/Documents/Web/Udemy/Desarrolla sistemas Web en ASP Net Core, SQL Server y Vuejs/SistemaVentas/obj/Debug/netcoreapp3.1/staticwebassets/SistemaVentas.StaticWebAssets.Manifest.cache
+/home/arturo/Documents/Web/Udemy/Desarrolla sistemas Web en ASP Net Core, SQL Server y Vuejs/SistemaVentas/obj/Debug/netcoreapp3.1/staticwebassets/SistemaVentas.StaticWebAssets.xml
+/home/arturo/Documents/Web/Udemy/Desarrolla sistemas Web en ASP Net Core, SQL Server y Vuejs/SistemaVentas/obj/Debug/netcoreapp3.1/SistemaVentas.MvcApplicationPartsAssemblyInfo.cache
+/home/arturo/Documents/Web/Udemy/Desarrolla sistemas Web en ASP Net Core, SQL Server y Vuejs/SistemaVentas/obj/Debug/netcoreapp3.1/SistemaVentas.AssemblyInfoInputs.cache
+/home/arturo/Documents/Web/Udemy/Desarrolla sistemas Web en ASP Net Core, SQL Server y Vuejs/SistemaVentas/obj/Debug/netcoreapp3.1/SistemaVentas.AssemblyInfo.cs
+/home/arturo/Documents/Web/Udemy/Desarrolla sistemas Web en ASP Net Core, SQL Server y Vuejs/SistemaVentas/obj/Debug/netcoreapp3.1/SistemaVentas.RazorTargetAssemblyInfo.cache
+/home/arturo/Documents/Web/Udemy/Desarrolla sistemas Web en ASP Net Core, SQL Server y Vuejs/SistemaVentas/obj/Debug/netcoreapp3.1/SistemaVentas.csproj.CopyComplete
+/home/arturo/Documents/Web/Udemy/Desarrolla sistemas Web en ASP Net Core, SQL Server y Vuejs/SistemaVentas/obj/Debug/netcoreapp3.1/SistemaVentas.dll
+/home/arturo/Documents/Web/Udemy/Desarrolla sistemas Web en ASP Net Core, SQL Server y Vuejs/SistemaVentas/obj/Debug/netcoreapp3.1/SistemaVentas.pdb
+/home/arturo/Documents/Web/Udemy/dotnet/SistemaVentas/bin/Debug/netcoreapp3.1/appsettings.Development.json
+/home/arturo/Documents/Web/Udemy/dotnet/SistemaVentas/bin/Debug/netcoreapp3.1/appsettings.json
+/home/arturo/Documents/Web/Udemy/dotnet/SistemaVentas/bin/Debug/netcoreapp3.1/Properties/launchSettings.json
+/home/arturo/Documents/Web/Udemy/dotnet/SistemaVentas/bin/Debug/netcoreapp3.1/SistemaVentas
+/home/arturo/Documents/Web/Udemy/dotnet/SistemaVentas/bin/Debug/netcoreapp3.1/SistemaVentas.deps.json
+/home/arturo/Documents/Web/Udemy/dotnet/SistemaVentas/bin/Debug/netcoreapp3.1/SistemaVentas.runtimeconfig.json
+/home/arturo/Documents/Web/Udemy/dotnet/SistemaVentas/bin/Debug/netcoreapp3.1/SistemaVentas.runtimeconfig.dev.json
+/home/arturo/Documents/Web/Udemy/dotnet/SistemaVentas/bin/Debug/netcoreapp3.1/SistemaVentas.dll
+/home/arturo/Documents/Web/Udemy/dotnet/SistemaVentas/bin/Debug/netcoreapp3.1/SistemaVentas.pdb
+/home/arturo/Documents/Web/Udemy/dotnet/SistemaVentas/bin/Debug/netcoreapp3.1/DinkToPdf.dll
+/home/arturo/Documents/Web/Udemy/dotnet/SistemaVentas/bin/Debug/netcoreapp3.1/ExcelLibrary.dll
+/home/arturo/Documents/Web/Udemy/dotnet/SistemaVentas/bin/Debug/netcoreapp3.1/Microsoft.AspNetCore.Authentication.JwtBearer.dll
+/home/arturo/Documents/Web/Udemy/dotnet/SistemaVentas/bin/Debug/netcoreapp3.1/Microsoft.EntityFrameworkCore.dll
+/home/arturo/Documents/Web/Udemy/dotnet/SistemaVentas/bin/Debug/netcoreapp3.1/Microsoft.EntityFrameworkCore.Relational.dll
+/home/arturo/Documents/Web/Udemy/dotnet/SistemaVentas/bin/Debug/netcoreapp3.1/Microsoft.IdentityModel.JsonWebTokens.dll
+/home/arturo/Documents/Web/Udemy/dotnet/SistemaVentas/bin/Debug/netcoreapp3.1/Microsoft.IdentityModel.Logging.dll
+/home/arturo/Documents/Web/Udemy/dotnet/SistemaVentas/bin/Debug/netcoreapp3.1/Microsoft.IdentityModel.Protocols.dll
+/home/arturo/Documents/Web/Udemy/dotnet/SistemaVentas/bin/Debug/netcoreapp3.1/Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
+/home/arturo/Documents/Web/Udemy/dotnet/SistemaVentas/bin/Debug/netcoreapp3.1/Microsoft.IdentityModel.Tokens.dll
+/home/arturo/Documents/Web/Udemy/dotnet/SistemaVentas/bin/Debug/netcoreapp3.1/MySql.Data.dll
+/home/arturo/Documents/Web/Udemy/dotnet/SistemaVentas/bin/Debug/netcoreapp3.1/MySql.Data.EntityFrameworkCore.dll
+/home/arturo/Documents/Web/Udemy/dotnet/SistemaVentas/bin/Debug/netcoreapp3.1/Newtonsoft.Json.dll
+/home/arturo/Documents/Web/Udemy/dotnet/SistemaVentas/bin/Debug/netcoreapp3.1/Remotion.Linq.dll
+/home/arturo/Documents/Web/Udemy/dotnet/SistemaVentas/bin/Debug/netcoreapp3.1/System.Configuration.ConfigurationManager.dll
+/home/arturo/Documents/Web/Udemy/dotnet/SistemaVentas/bin/Debug/netcoreapp3.1/System.IdentityModel.Tokens.Jwt.dll
+/home/arturo/Documents/Web/Udemy/dotnet/SistemaVentas/bin/Debug/netcoreapp3.1/System.Interactive.Async.dll
+/home/arturo/Documents/Web/Udemy/dotnet/SistemaVentas/bin/Debug/netcoreapp3.1/System.Security.Cryptography.Pkcs.dll
+/home/arturo/Documents/Web/Udemy/dotnet/SistemaVentas/bin/Debug/netcoreapp3.1/System.Security.Cryptography.ProtectedData.dll
+/home/arturo/Documents/Web/Udemy/dotnet/SistemaVentas/bin/Debug/netcoreapp3.1/runtimes/win/lib/netcoreapp2.1/System.Security.Cryptography.Pkcs.dll
+/home/arturo/Documents/Web/Udemy/dotnet/SistemaVentas/bin/Debug/netcoreapp3.1/runtimes/win/lib/netstandard2.0/System.Security.Cryptography.ProtectedData.dll
+/home/arturo/Documents/Web/Udemy/dotnet/SistemaVentas/obj/Debug/netcoreapp3.1/SistemaVentas.csprojAssemblyReference.cache
+/home/arturo/Documents/Web/Udemy/dotnet/SistemaVentas/obj/Debug/netcoreapp3.1/staticwebassets/SistemaVentas.StaticWebAssets.Manifest.cache
+/home/arturo/Documents/Web/Udemy/dotnet/SistemaVentas/obj/Debug/netcoreapp3.1/staticwebassets/SistemaVentas.StaticWebAssets.xml
+/home/arturo/Documents/Web/Udemy/dotnet/SistemaVentas/obj/Debug/netcoreapp3.1/SistemaVentas.MvcApplicationPartsAssemblyInfo.cache
+/home/arturo/Documents/Web/Udemy/dotnet/SistemaVentas/obj/Debug/netcoreapp3.1/SistemaVentas.AssemblyInfoInputs.cache
+/home/arturo/Documents/Web/Udemy/dotnet/SistemaVentas/obj/Debug/netcoreapp3.1/SistemaVentas.AssemblyInfo.cs
+/home/arturo/Documents/Web/Udemy/dotnet/SistemaVentas/obj/Debug/netcoreapp3.1/SistemaVentas.RazorTargetAssemblyInfo.cache
+/home/arturo/Documents/Web/Udemy/dotnet/SistemaVentas/obj/Debug/netcoreapp3.1/SistemaVentas.csproj.CopyComplete
+/home/arturo/Documents/Web/Udemy/dotnet/SistemaVentas/obj/Debug/netcoreapp3.1/SistemaVentas.dll
+/home/arturo/Documents/Web/Udemy/dotnet/SistemaVentas/obj/Debug/netcoreapp3.1/SistemaVentas.pdb

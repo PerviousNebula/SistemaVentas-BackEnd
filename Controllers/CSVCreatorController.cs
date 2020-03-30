@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using ExcelLibrary.SpreadSheet;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -18,6 +19,7 @@ public class CSVCreatorController : ControllerBase
         _context = context;
     }
 
+    [Authorize(Roles = "Administrador, Almacenero")]
     [HttpGet("[action]")]
     public async Task<IActionResult> Categorias([FromQuery] CategoriaFilterModel filter, bool filtered = true)
     {
@@ -66,7 +68,8 @@ public class CSVCreatorController : ControllerBase
         return File(m.ToArray(), "application/vnd.ms-excel", fileName);
     }
 
-    [HttpGet("[action]")]
+    [Authorize(Roles = "Administrador, Almacenero")]
+   [HttpGet("[action]")]
     public async Task<IActionResult> Articulos([FromQuery] ArticuloFilterModel filter, bool filtered = true)
     {
         var items = await _context.Articulos.Include(a => a.categoria).OrderBy(a => a.nombre).ToListAsync();
@@ -120,6 +123,7 @@ public class CSVCreatorController : ControllerBase
         return File(m.ToArray(), "application/vnd.ms-excel", fileName);
     }
         
+    [Authorize(Roles = "Administrador, Almacenero")]
     [HttpGet("[action]")]
     public async Task<IActionResult> Ingresos([FromQuery] IngresoFilterModel filter, bool filtered = true)
     {
@@ -177,6 +181,7 @@ public class CSVCreatorController : ControllerBase
         return File(m.ToArray(), "application/vnd.ms-excel", fileName);
     }
 
+    [Authorize(Roles = "Administrador, Almacenero")]
     [HttpGet("[action]")]
     public async Task<IActionResult> Proveedores([FromQuery] ProveedorFilterModel filter, bool filtered = true)
     {
@@ -222,6 +227,7 @@ public class CSVCreatorController : ControllerBase
         return File(m.ToArray(), "application/vnd.ms-excel", fileName);
     }
 
+    [Authorize(Roles = "Administrador, Vendedor")]
     [HttpGet("[action]")]
     public async Task<IActionResult> Ventas([FromQuery] VentaFilterModel filter, bool filtered = true)
     {
@@ -279,6 +285,7 @@ public class CSVCreatorController : ControllerBase
         return File(m.ToArray(), "application/vnd.ms-excel", fileName);
     }
 
+    [Authorize(Roles = "Administrador, Vendedor")]
     [HttpGet("[action]")]
     public async Task<IActionResult> Clientes([FromQuery] ClientesFilterModel filter, bool filtered = true)
     {

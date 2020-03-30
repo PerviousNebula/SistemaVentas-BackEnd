@@ -115,6 +115,39 @@ public class ArticulosController : ControllerBase
         });
     }
     
+    // GET: api/Articulos/BuscarPorNombreDesc/zucaritas
+    [HttpGet("[action]/{filtro}")]
+    public async Task<IActionResult> BuscarPorNombreDesc([FromRoute] string filtro, [FromQuery] PaginationParameters pagParams)
+    {
+        var items = await _context.Articulos.Where(a => a.nombre.IndexOf(filtro, StringComparison.OrdinalIgnoreCase) >= 0 ||
+                                                        a.descripcion.IndexOf(filtro, StringComparison.OrdinalIgnoreCase) >= 0 &&
+                                                        a.activo)
+                                            .Include(a => a.categoria)
+                                            .ToListAsync();
+        if (items == null) { return Ok(new List<ArticuloViewModel>()); }
+        var articulos = PagedList<Articulo>.ToPagedList(items, pagParams.PageNumber, pagParams.PageSize);
+        // Response headers para la paginación
+        var metadata = new
+	    {
+            articulos.TotalCount,
+            articulos.PageSize,
+            articulos.CurrentPage,
+            articulos.TotalPages,
+            articulos.HasNext,
+            articulos.HasPrevious
+	    };
+        Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(metadata));
+        return Ok(articulos.Select(a => new ArticuloViewModel {
+            idArticulo = a.idArticulo,
+            nombre = a.nombre,
+            descripcion = a.descripcion,
+            codigo = a.codigo,
+            stock = a.stock,
+            precio_venta = a.precio_venta,
+            categoria = a.categoria.nombre
+        }).OrderBy(a => a.nombre));
+    }
+
     // PUT: api/Articulos/Actualizar
     [HttpPut("[action]")]
     public async Task<ActionResult> Actualizar([FromBody] ArticuloActualizarModel model) 
